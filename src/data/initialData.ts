@@ -1,0 +1,264 @@
+import { TeamMember, CivicUpdate, NotificationItem, Language } from '../types';
+
+export const CIVIC_INNOVATORS_LOGO_URL =
+  'https://gpllirkyqgzwgsndliht.supabase.co/storage/v1/object/public/JANNITI%20Storage/CIVIC%20INNOVATORS%20LOGO.jpeg';
+
+export const TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: 'ankit-sharma',
+    name: 'ANKIT SHARMA',
+    designation: 'Web Developer',
+    role: 'TEAM LEADER - BACKEND',
+    quote: '"Web Developer — Architecting robust server-side logic and secure systems."',
+    email: 'odishankit@gmail.com',
+    phone: '8847845435',
+    avatarUrl: 'https://gpllirkyqgzwgsndliht.supabase.co/storage/v1/object/public/JANNITI%20Storage/Backend.jpeg',
+    initials: 'AS',
+    gradient: 'from-sky-400 to-blue-600',
+  },
+  {
+    id: 'ayushman-pati',
+    name: 'AYUSHMAN PATI',
+    designation: 'Web Developer',
+    role: 'MEMBER - FRONTEND',
+    quote: '"Web Developer — Crafting fluid, interactive, and responsive user interfaces."',
+    email: 'ayushmanpati5@gmail.com',
+    phone: '8018109850',
+    avatarUrl: 'https://gpllirkyqgzwgsndliht.supabase.co/storage/v1/object/public/JANNITI%20Storage/Frontend.jpeg',
+    initials: 'AP',
+    gradient: 'from-cyan-400 to-teal-500',
+  },
+  {
+    id: 'spandan-mohanty',
+    name: 'SPANDAN MOHANTY',
+    designation: 'Web Developer',
+    role: 'MEMBER - DATABASE',
+    quote: '"Web Developer — Managing data structures and optimizing query performance."',
+    email: 'mrspandanmohantyatwork@gmail.com',
+    phone: '7809473790',
+    avatarUrl: 'https://gpllirkyqgzwgsndliht.supabase.co/storage/v1/object/public/JANNITI%20Storage/Database.jpeg',
+    initials: 'SM',
+    gradient: 'from-purple-400 to-indigo-600',
+  },
+  {
+    id: 'subhalaxmi-swain',
+    name: 'SUBHALAXMI SWAIN',
+    designation: 'Idea Presenter',
+    role: 'MEMBER - PPT DESIGNER',
+    quote: '"Idea Presenter — Designing impactful presentations to pitch our vision clearly."',
+    email: 'slswain2006@gmail.com',
+    phone: '9692816446',
+    avatarUrl: 'https://gpllirkyqgzwgsndliht.supabase.co/storage/v1/object/public/JANNITI%20Storage/PPT1.jpeg',
+    initials: 'SS',
+    gradient: 'from-pink-400 to-rose-500',
+  },
+  {
+    id: 'sneha-sinha',
+    name: 'SNEHA SINHA',
+    designation: 'Idea Presenter',
+    role: 'MEMBER - PPT DESIGNER',
+    quote: '"Idea Presenter — Structuring creative slides to showcase our project layout."',
+    email: 'sinhasneha567@gmail.com',
+    phone: '6370010557',
+    avatarUrl: 'https://gpllirkyqgzwgsndliht.supabase.co/storage/v1/object/public/JANNITI%20Storage/PPT2.jpeg',
+    initials: 'SS',
+    gradient: 'from-amber-400 to-orange-500',
+  },
+];
+
+export const INITIAL_UPDATES: CivicUpdate[] = [
+  {
+    id: 'JNT-4173',
+    ward: 'Ward 7',
+    category: 'Public Health',
+    description: 'Voice/Photo civic development request submitted.',
+    timestamp: '08:05 PM',
+    status: 'pending',
+    likes: 4,
+    authorName: 'xyz',
+    imageUrl: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'JNT-9662',
+    ward: 'Ward 3',
+    category: 'Infrastructure',
+    description: 'Big pothole on the road which is creating problem for people using road transport',
+    timestamp: '07:51 PM',
+    status: 'pending',
+    likes: 8,
+    authorName: 'Spandan Mohanty',
+    imageUrl: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'upd_bbsr_04',
+    ward: 'Ward 7',
+    category: 'Public Health',
+    description: 'Stagnant stormwater drain near hospital gate causing severe breeding of mosquitoes',
+    timestamp: 'Yesterday',
+    status: 'in_progress',
+    likes: 6,
+    authorName: 'Dr. Ananya Ray',
+    imageUrl: 'https://images.unsplash.com/photo-1541888946425-d0fbb186c5f8?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'upd_bbsr_01',
+    ward: 'Ward 3',
+    category: 'Infrastructure',
+    description: 'Severe cratering and damaged road surface near Market Building stretch',
+    timestamp: '2 days ago',
+    status: 'in_progress',
+    likes: 15,
+    authorName: 'Rajesh Mohanty',
+    imageUrl: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'JNT-5812',
+    ward: 'Ward 2',
+    category: 'Waste Management',
+    description: 'Overflowing garbage collection bin near Rasulgarh square requiring daily clearance',
+    timestamp: '3 days ago',
+    status: 'pending',
+    likes: 5,
+    authorName: 'Sunita Nayak',
+    imageUrl: 'https://images.unsplash.com/photo-1605600659908-0ef719419d41?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'JNT-7741',
+    ward: 'Ward 1',
+    category: 'Safety',
+    description: 'Street lighting non-functional across Master Canteen stretch causing safety concerns',
+    timestamp: '4 days ago',
+    status: 'resolved',
+    likes: 9,
+    authorName: 'Amit Patnaik',
+    imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'JNT-2209',
+    ward: 'Ward 4',
+    category: 'Water & Sanitation',
+    description: 'Low water supply pipeline pressure during morning peak hours in residential block',
+    timestamp: '5 days ago',
+    status: 'pending',
+    likes: 7,
+    authorName: 'Bikash Das',
+    imageUrl: 'https://images.unsplash.com/photo-1584467735815-f778f274e296?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'JNT-6644',
+    ward: 'Ward 5',
+    category: 'Education',
+    description: 'Primary municipal school boundary wall collapsed after monsoon rains',
+    timestamp: '6 days ago',
+    status: 'in_progress',
+    likes: 11,
+    authorName: 'Meena Sahoo',
+    imageUrl: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'JNT-1123',
+    ward: 'Ward 6',
+    category: 'Transit',
+    description: 'Traffic congestion and lack of designated pedestrian crossing near school junction',
+    timestamp: '1 week ago',
+    status: 'pending',
+    likes: 4,
+    authorName: 'Rahul Jena',
+    imageUrl: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'JNT-8890',
+    ward: 'Ward 3',
+    category: 'Infrastructure',
+    description: 'Tree branches obstructing overhead power cables on high-tension transmission line',
+    timestamp: '1 week ago',
+    status: 'resolved',
+    likes: 14,
+    authorName: 'Sneha Sinha',
+    imageUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&auto=format&fit=crop&q=80',
+  },
+];
+
+export const INITIAL_NOTIFICATIONS: NotificationItem[] = [];
+
+export const TRANSLATIONS: Record<Language, {
+  title: string;
+  subtitle: string;
+  audio: string;
+  photo: string;
+  placeholder: string;
+  submit: string;
+  msgText: string;
+  whatsapp: string;
+  categoryLabel: string;
+  wardLabel: string;
+  recordingVoice: string;
+  stopRecord: string;
+  photoAttached: string;
+  audioAttached: string;
+  remove: string;
+  submitting: string;
+  successTitle: string;
+  successDesc: string;
+}> = {
+  en: {
+    title: 'Share your development need',
+    subtitle: 'How would you like to submit your request?',
+    audio: 'Record Voice',
+    photo: 'Take Photo',
+    placeholder: 'Type your suggestion or describe the issue here...',
+    submit: 'Submit to Council',
+    msgText: 'Or submit using your favorite app:',
+    whatsapp: '💬 Share via WhatsApp',
+    categoryLabel: 'Category',
+    wardLabel: 'Ward Number',
+    recordingVoice: 'Recording voice message...',
+    stopRecord: 'Stop Recording',
+    photoAttached: 'Photo attached',
+    audioAttached: 'Audio recording ready',
+    remove: 'Remove',
+    submitting: 'Submitting...',
+    successTitle: 'Submission Successful!',
+    successDesc: 'Your request has been routed to the Municipal Council and added to the civic ledger.',
+  },
+  hi: {
+    title: 'अपनी विकास आवश्यकता साझा करें',
+    subtitle: 'आप अपना अनुरोध कैसे प्रस्तुत करना चाहेंगे?',
+    audio: 'आवाज़ रिकॉर्ड करें',
+    photo: 'फ़ोटो लें',
+    placeholder: 'अपना सुझाव टाइप करें या समस्या का वर्णन यहां करें...',
+    submit: 'परिषद को जमा करें',
+    msgText: 'या अपने पसंदीदा ऐप का उपयोग करके जमा करें:',
+    whatsapp: '💬 व्हाट्सएप के माध्यम से साझा करें',
+    categoryLabel: 'श्रेणी',
+    wardLabel: 'वार्ड संख्या',
+    recordingVoice: 'आवाज़ रिकॉर्ड हो रही है...',
+    stopRecord: 'रिकॉर्डिंग रोकें',
+    photoAttached: 'फ़ोटो संलग्न',
+    audioAttached: 'ऑडियो रिकॉर्डिंग तैयार',
+    remove: 'हटाएं',
+    submitting: 'जमा किया जा रहा है...',
+    successTitle: 'सफलतापूर्वक जमा हो गया!',
+    successDesc: 'आपका अनुरोध नगर परिषद को भेज दिया गया है और नागरिक लेज़र में जोड़ दिया गया है।',
+  },
+  or: {
+    title: 'ଆପଣଙ୍କର ବିକାଶ ଆବଶ୍ୟକତା ସେୟାର କରନ୍ତୁ',
+    subtitle: 'ଆପଣ ନିଜର ଅନୁରୋଧ କିପରି ଦାଖଲ କରିବାକୁ ଚାହିଁବେ?',
+    audio: 'ଭଏସ୍ ରେକର୍ଡ କରନ୍ତୁ',
+    photo: 'ଫଟୋ ଉଠାନ୍ତୁ',
+    placeholder: 'ଆପଣଙ୍କର ପରାମର୍ଶ ଟାଇପ୍ କରନ୍ତୁ କିମ୍ବା ଏଠାରେ ସମସ୍ୟାର ବର୍ଣ୍ଣନା କରନ୍ତୁ...',
+    submit: 'ପରିଷଦକୁ ଦାଖଲ କରନ୍ତୁ',
+    msgText: 'କିମ୍ବା ଆପଣଙ୍କର ପ୍ରିୟ ଆପ୍ ବ୍ୟବହାର କରି ଦାଖଲ କରନ୍ତୁ:',
+    whatsapp: '💬 ହ୍ୱାଟସ୍ ଆପ୍ ମାଧ୍ୟମରେ ସେୟାର କରନ୍ତୁ',
+    categoryLabel: 'ବର୍ଗ',
+    wardLabel: 'ୱାର୍ଡ଼ ନମ୍ବର',
+    recordingVoice: 'ଭଏସ୍ ରେକର୍ଡିଂ ଚାଲିଛି...',
+    stopRecord: 'ରେକର୍ଡିଂ ବନ୍ଦ କରନ୍ତୁ',
+    photoAttached: 'ଫଟୋ ଯୋଡା ଯାଇଛି',
+    audioAttached: 'ଅଡିଓ ରେକର୍ଡିଂ ପ୍ରସ୍ତୁତ',
+    remove: 'ବାହାର କରନ୍ତୁ',
+    submitting: 'ଦାଖଲ ହେଉଛି...',
+    successTitle: 'ସଫଳତାର ସହିତ ଦାଖଲ ହେଲା!',
+    successDesc: 'ଆପଣଙ୍କ ଅନୁରୋଧ ପୌର ପରିଷଦକୁ ପ୍ରେରଣ କରାଯାଇଛି ଏବଂ ନାଗରିକ ଲେଜରରେ ଯୋଡା ଯାଇଛି।',
+  },
+};
