@@ -9,7 +9,7 @@ import { ProfileDropdown } from './components/ProfileDropdown';
 import { SubmissionsDrawer } from './components/SubmissionsDrawer';
 import { NotificationsModal } from './components/NotificationsModal';
 import { CivicLogo } from './components/CivicLogo';
-import { Language, User, CivicUpdate, NotificationItem } from './types';
+import { Language, User, CivicUpdate, NotificationItem, CivicFeedback } from './types';
 import {
   getActiveSession,
   saveActiveSession,
@@ -21,7 +21,9 @@ import {
   buildUserFromAccount,
   getStoredAccounts,
   isDisallowedIssue,
+  normalizeExactLocation,
 } from './utils/authStorage';
+import { recordLoginAudit } from './utils/auditStorage';
 import {
   sendOrderToSupabase,
   fetchOrdersFromSupabase,
@@ -43,6 +45,7 @@ export default function App() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSubmissionsOpen, setIsSubmissionsOpen] = useState(false);
   const [submissionsFilter, setSubmissionsFilter] = useState<'all' | 'resolved'>('all');
+  const [submissionsUserOnly, setSubmissionsUserOnly] = useState<boolean>(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   // Real Data State (starts empty or from real user submissions)
@@ -78,14 +81,16 @@ export default function App() {
                 audioUrl: remote.audioUrl || u.audioUrl,
                 authorName: remote.authorName || u.authorName,
                 description: remote.description || u.description,
-                ward: remote.ward || u.ward,
+                ward: normalizeExactLocation(remote.ward || u.ward),
                 category: remote.category || u.category,
               };
             }
-            return u;
+            return { ...u, ward: normalizeExactLocation(u.ward) };
           });
           const existingIds = new Set(updatedPrev.map((u) => u.id));
-          const freshOrders = remoteOrders.filter((ro) => !existingIds.has(ro.id) && !isDisallowedIssue(ro));
+          const freshOrders = remoteOrders
+            .filter((ro) => !existingIds.has(ro.id) && !isDisallowedIssue(ro))
+            .map((ro) => ({ ...ro, ward: normalizeExactLocation(ro.ward) }));
           const merged = [...freshOrders, ...updatedPrev];
           saveStoredCivicUpdates(merged);
           return merged;
@@ -151,6 +156,18 @@ export default function App() {
   };
 
   const handleSignOut = () => {
+    if (user) {
+      recordLoginAudit({
+        userEmail: user.email,
+        userName: user.name,
+        userRole: user.role,
+        department: user.department,
+        ward: user.ward,
+        status: 'LOGOUT',
+        authMethod: 'User Session Termination',
+        details: 'User initiated secure logout from session',
+      }).catch(console.error);
+    }
     clearActiveSession();
     setUser(null);
     setIsProfileOpen(false);
@@ -212,6 +229,12 @@ export default function App() {
     saveStoredNotifications(readNotifs);
   };
 
+  const handleProvideFeedback = (id: string, feedback: CivicFeedback) => {
+    const nextUpdates = updates.map((u) => (u.id === id ? { ...u, feedback } : u));
+    setUpdates(nextUpdates);
+    saveStoredCivicUpdates(nextUpdates);
+  };
+
   return (
     <div className="min-h-screen flex flex-col pt-20 transition-colors duration-300">
       {/* Header */}
@@ -242,10 +265,12 @@ export default function App() {
           onOpenIntelligenceSuite={() => setCurrentTab('officer')}
           onOpenSubmissions={() => {
             setSubmissionsFilter('all');
+            setSubmissionsUserOnly(true);
             setIsSubmissionsOpen(true);
           }}
           onOpenResolved={() => {
             setSubmissionsFilter('resolved');
+            setSubmissionsUserOnly(true);
             setIsSubmissionsOpen(true);
           }}
           onOpenNotifications={() => setIsNotificationsOpen(true)}
@@ -261,6 +286,7 @@ export default function App() {
             updates={updates}
             onAddUpdate={handleAddUpdate}
             onOpenAuth={handleOpenAuth}
+            onProvideFeedback={handleProvideFeedback}
           />
         ) : currentTab === 'officer' ? (
           <OfficerIntelligenceSuite
@@ -316,6 +342,7 @@ export default function App() {
             <button
               onClick={() => {
                 setSubmissionsFilter('all');
+                setSubmissionsUserOnly(false);
                 setIsSubmissionsOpen(true);
               }}
               className="hover:text-[var(--primary)] transition-colors cursor-pointer flex items-center gap-0.5"
@@ -358,6 +385,8 @@ export default function App() {
         updates={updates}
         user={user}
         initialFilter={submissionsFilter}
+        userOnly={submissionsUserOnly}
+        onProvideFeedback={handleProvideFeedback}
       />
 
       {/* Notifications Modal */}

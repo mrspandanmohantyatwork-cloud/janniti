@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header
       id="main-header"
-      className="fixed top-0 left-0 w-full h-20 bg-[var(--card-bg)] backdrop-blur-xl border-b border-[var(--border-color)] flex justify-between items-center px-4 sm:px-8 md:px-12 z-50 shadow-[0_4px_30px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-all duration-300"
+      className="fixed top-0 left-0 w-full h-20 bg-black border-b border-[var(--border-color)] flex justify-between items-center px-4 sm:px-8 md:px-12 z-50 shadow-[0_4px_30px_rgba(0,0,0,0.6)] transition-all duration-300"
     >
       {/* Brand Heading & Logo */}
       <div className="flex items-center gap-3 sm:gap-6">

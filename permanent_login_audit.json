@@ -1,0 +1,16 @@
+[
+  {
+    "id": "AUD-INIT-01",
+    "timestamp": "2026-09-18T18:00:00.000Z",
+    "formattedTime": "18 Sep 2026, 06:00 PM",
+    "userEmail": "officer@janniti.gov.in",
+    "userName": "Municipal Officer",
+    "userRole": "authority",
+    "department": "Civic Administration & Public Works",
+    "ward": "Saheed Nagar, Bhubaneswar",
+    "status": "SUCCESS",
+    "authMethod": "Pre-authorized Municipal Registry",
+    "auditSignature": "SHA256-INIT-VERIFIED",
+    "details": "Municipal officer secure session established"
+  }
+]

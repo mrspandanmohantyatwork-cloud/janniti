@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CivicLogo } from './CivicLogo';
 import { UserRole, User } from '../types';
 import { registerAccount, authenticateUserAsync } from '../utils/authStorage';
+import { recordLoginAudit } from '../utils/auditStorage';
 import { X, CheckCircle2, AlertCircle, ArrowRight, Lock, Mail, Shield, User as UserIcon, Eye, EyeOff } from 'lucide-react';
 
 interface AuthModalProps {
@@ -71,6 +72,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
       if (!result.success) {
         setErrorMsg(result.message);
+        // Record failed login audit event
+        recordLoginAudit({
+          userEmail: email.trim(),
+          userName: email.trim().split('@')[0],
+          userRole: role,
+          department: role === 'authority' ? 'Municipal Administration' : 'Citizen Access',
+          status: 'FAILED',
+          authMethod: role === 'authority' ? 'Authority Verification Endpoint' : 'Citizen Login Endpoint',
+          details: `Authentication rejected: ${result.message}`,
+        }).catch(console.error);
+
         // Only citizens can navigate to public sign up
         if (
           role === 'citizen' &&
@@ -83,6 +95,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       }
 
       if (result.user) {
+        // Record successful permanent login audit strictly for authorities
+        if (result.user.role === 'authority') {
+          recordLoginAudit({
+            userEmail: result.user.email,
+            userName: result.user.name || result.user.email.split('@')[0],
+            userRole: 'authority',
+            department: result.user.department || 'Civic Administration & Public Works',
+            ward: result.user.ward || 'Saheed Nagar, Bhubaneswar',
+            status: 'SUCCESS',
+            authMethod:
+              result.source === 'supabase'
+                ? 'Supabase Authorities DB (Cloud)'
+                : 'Pre-authorized Municipal Registry',
+            details: 'Officer authenticated. Granted access to Officer Intelligence Suite.',
+          }).catch(console.error);
+        }
+
         if (role === 'authority' && result.source === 'supabase') {
           setSuccessMsg('Authenticated with Supabase Authorities database!');
         } else {

@@ -33,7 +33,7 @@ const DEFAULT_AUTHORITY_ACCOUNT: StoredAccount = {
   role: 'authority',
   profileCompleted: true,
   name: 'Municipal Officer',
-  ward: 'Ward 1',
+  ward: 'Saheed Nagar, Bhubaneswar',
   city: 'Bhubaneswar',
   address: 'Municipal Corporation Headquarters',
   pincode: '751001',
@@ -304,9 +304,15 @@ export const clearActiveSession = (): void => {
 // Helper: build User interface from account
 export const buildUserFromAccount = (account: StoredAccount): User => {
   const allUpdates = getStoredCivicUpdates();
-  const userSubmissions = allUpdates.filter(
-    (u) => u.authorId === account.id || (account.name && u.authorName === account.name)
-  );
+  const userSubmissions = allUpdates.filter((u) => {
+    if (u.authorId && (u.authorId === account.id || u.authorId === account.email)) return true;
+    if (account.name && u.authorName && u.authorName.trim().toLowerCase() === account.name.trim().toLowerCase()) return true;
+    if (account.email) {
+      const prefix = account.email.split('@')[0].trim().toLowerCase();
+      if (u.authorName && u.authorName.trim().toLowerCase() === prefix) return true;
+    }
+    return false;
+  });
   const resolved = userSubmissions.filter((u) => u.status === 'resolved');
 
   const fullName = account.name || account.email.split('@')[0];
@@ -325,7 +331,7 @@ export const buildUserFromAccount = (account: StoredAccount): User => {
     avatarInitials: initials,
     avatarUrl: account.avatarUrl,
     phone: account.phone || '',
-    ward: account.ward || 'Ward 1',
+    ward: account.ward && !account.ward.startsWith('Ward') ? account.ward : 'Saheed Nagar, Bhubaneswar',
     city: account.city || '',
     address: account.address || '',
     pincode: account.pincode || '',
@@ -339,14 +345,106 @@ export const buildUserFromAccount = (account: StoredAccount): User => {
 // ----------------- REAL CIVIC UPDATES -----------------
 export const isDisallowedIssue = (item: { id?: string; description?: string }): boolean => {
   if (!item) return false;
-  if (item.id === 'JNT-3290' || item.id === 'JNT-6517') return true;
+  if (
+    item.id === 'JNT-3290' ||
+    item.id === 'JNT-6517' ||
+    item.id === 'JNT-4173' ||
+    item.id === 'JNT-8425' ||
+    item.id === 'JNT-6313'
+  ) {
+    return true;
+  }
   const desc = (item.description || '').toLowerCase();
   if (desc.includes('gita')) return true;
   if (desc.includes('madanpur')) return true;
   if (desc.includes('cyclone')) return true;
   if (desc.includes('gramadiha')) return true;
   if (desc.includes('gift')) return true;
+  if (desc.includes('voice/photo civic development request')) return true;
+  if (desc.includes('goverment hospital condition not good')) return true;
+  if (desc.includes('government hospital condition not good')) return true;
+  if (desc.includes('hospital condition not good')) return true;
   return false;
+};
+
+export const WARD_TO_EXACT_LOCATION: Record<string, string> = {
+  'ward 1': 'Master Canteen, Station Square, Bhubaneswar',
+  'ward 2': 'Rasulgarh Square, Bhubaneswar',
+  'ward 3': 'Near Hotel Num Num, Acharya Vihar Square.',
+  'ward 4': 'Nayapalli Water Works, Bhubaneswar',
+  'ward 5': 'Saheed Nagar High School, Bhubaneswar',
+  'ward 6': 'Khandagiri Square, Bhubaneswar',
+  'ward 7': 'Capital Hospital Road, Unit-6, Bhubaneswar',
+  'ward 10': 'Near Vishal Mega Mart, Jaydev Vihar Square.',
+  'ward 18': 'Near Kalinga Stadium.',
+  'ward 20': 'VSS Nagar, Bhubaneswar',
+};
+
+/**
+ * Normalizes any ward number or location text to the exact location given by the citizen.
+ * Specifically:
+ * ward 3 = Near Hotel Num Num, Acharya Vihar Square.
+ * ward 10 = Near Vishal Mega Mart, Jaydev Vihar Square.
+ * ward 18 = Near Kalinga Stadium.
+ */
+export const normalizeExactLocation = (rawLocation: string | undefined): string => {
+  if (!rawLocation) return 'Bhubaneswar';
+  const trimmed = rawLocation.trim();
+  const lower = trimmed.toLowerCase();
+
+  // ward 3 = Near Hotel Num Num, Acharya Vihar Square.
+  if (
+    lower === 'ward 3' ||
+    lower === 'ward-3' ||
+    lower === 'ward 03' ||
+    lower === 'ward 3.' ||
+    lower === 'ward 3, bhubaneswar' ||
+    lower.includes('ward 3') ||
+    lower.includes('ward-3') ||
+    /\bward\s*(no\.?|num\.?|number)?\s*3\b/i.test(lower)
+  ) {
+    return 'Near Hotel Num Num, Acharya Vihar Square.';
+  }
+
+  // ward 10 = Near Vishal Mega Mart, Jaydev Vihar Square.
+  if (
+    lower === 'ward 10' ||
+    lower === 'ward-10' ||
+    lower === 'ward 10.' ||
+    lower === 'ward 10, bhubaneswar' ||
+    lower.includes('ward 10') ||
+    lower.includes('ward-10') ||
+    /\bward\s*(no\.?|num\.?|number)?\s*10\b/i.test(lower)
+  ) {
+    return 'Near Vishal Mega Mart, Jaydev Vihar Square.';
+  }
+
+  // ward 18 = Near Kalinga Stadium.
+  if (
+    lower === 'ward 18' ||
+    lower === 'ward-18' ||
+    lower === 'ward 18.' ||
+    lower === 'ward 18, bhubaneswar' ||
+    lower.includes('ward 18') ||
+    lower.includes('ward-18') ||
+    /\bward\s*(no\.?|num\.?|number)?\s*18\b/i.test(lower)
+  ) {
+    return 'Near Kalinga Stadium.';
+  }
+
+  if (WARD_TO_EXACT_LOCATION[lower]) {
+    return WARD_TO_EXACT_LOCATION[lower];
+  }
+
+  // Any other "ward X" or "ward-X" pattern
+  if (/^ward[\s-]*\d+/i.test(lower)) {
+    const num = lower.replace(/\D/g, '');
+    const mapped = WARD_TO_EXACT_LOCATION[`ward ${num}`];
+    if (mapped) return mapped;
+    return `Location Sector ${num}, Bhubaneswar`;
+  }
+
+  return trimmed;
 };
 
 export const getStoredCivicUpdates = (): CivicUpdate[] => {
@@ -354,15 +452,22 @@ export const getStoredCivicUpdates = (): CivicUpdate[] => {
     const raw = localStorage.getItem(STORAGE_KEYS.UPDATES);
     const parsed: CivicUpdate[] = raw ? JSON.parse(raw) : [];
     const filtered = parsed.filter((u) => !isDisallowedIssue(u));
-    // Ensure "Big pothole on the road which is creating problem for people using road transport" / JNT-9662 is pending
+    // Ensure "Big pothole on the road which is creating problem for people using road transport" / JNT-9662 is pending and normalize ward to exact location
     const normalized = filtered.map((u) => {
+      let loc = normalizeExactLocation(u.ward);
       if (
         u.id === 'JNT-9662' ||
         (u.description && u.description.toLowerCase().includes('big pothole on the road'))
       ) {
-        return { ...u, status: 'pending' as const };
+        return {
+          ...u,
+          ward: 'Near Hotel Num Num, Acharya Vihar Square.',
+          lat: 20.3015,
+          lng: 85.8312,
+          status: 'pending' as const,
+        };
       }
-      return u;
+      return { ...u, ward: loc };
     });
     if (filtered.length !== parsed.length || JSON.stringify(normalized) !== JSON.stringify(filtered)) {
       saveStoredCivicUpdates(normalized);
@@ -375,7 +480,12 @@ export const getStoredCivicUpdates = (): CivicUpdate[] => {
 
 export const saveStoredCivicUpdates = (updates: CivicUpdate[]): void => {
   try {
-    const filtered = updates.filter((u) => !isDisallowedIssue(u));
+    const filtered = updates
+      .filter((u) => !isDisallowedIssue(u))
+      .map((u) => ({
+        ...u,
+        ward: normalizeExactLocation(u.ward),
+      }));
     localStorage.setItem(STORAGE_KEYS.UPDATES, JSON.stringify(filtered));
   } catch (err) {
     console.error('Failed to save updates:', err);

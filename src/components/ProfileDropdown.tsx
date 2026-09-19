@@ -1,6 +1,7 @@
 import React from 'react';
 import { User } from '../types';
-import { FileText, CheckCircle2, Bell, LogOut, Shield, MapPin, Settings, X, Phone, Home } from 'lucide-react';
+import { normalizeExactLocation } from '../utils/authStorage';
+import { FileText, CheckCircle2, Bell, LogOut, Shield, MapPin, Settings, X, Phone, Home, Star } from 'lucide-react';
 
 interface ProfileDropdownProps {
   isOpen: boolean;
@@ -81,7 +82,7 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
             <div className="flex flex-col items-center gap-1 text-xs text-[var(--text-muted)] mb-3">
               <div className="flex items-center gap-1">
                 <MapPin className="w-3 h-3 text-sky-400" />
-                <span>{user.ward || 'Ward 1'} {user.city ? `• ${user.city}` : ''}</span>
+                <span>{normalizeExactLocation(user.ward || 'Saheed Nagar')} {user.city ? `• ${user.city}` : ''}</span>
               </div>
               {user.phone && (
                 <div className="flex items-center gap-1 text-[11px] text-[var(--text-muted)]">
@@ -143,19 +144,31 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
 
           {!isOfficer && (
             <button
+              id="profile-resolved-requests-btn"
               onClick={() => {
                 onClose();
                 onOpenResolved();
               }}
-              className="w-full flex items-center justify-between p-3 text-xs font-semibold text-[var(--text)] hover:bg-[var(--item-hover)] border-b border-[var(--border-color)] transition-colors cursor-pointer text-left"
+              className="w-full flex items-center justify-between p-3 text-xs font-semibold text-[var(--text)] bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent hover:from-emerald-500/20 hover:via-emerald-500/10 border-b border-[var(--border-color)] hover:border-emerald-500/40 transition-all cursor-pointer text-left group"
             >
               <div className="flex items-center gap-2.5">
-                <span className="p-1 rounded-md bg-emerald-500/10 text-emerald-400">
+                <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 group-hover:scale-105 transition-transform shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                   <CheckCircle2 className="w-4 h-4" />
                 </span>
-                <span>Resolved Requests</span>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-[var(--text)]">Resolved Requests</span>
+                    <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-0.5">
+                      <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+                      Feedback
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-[var(--text-muted)] group-hover:text-emerald-300/80 transition-colors">
+                    Rate resolution & leave feedback
+                  </span>
+                </div>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 shadow-xs">
                 {user.resolvedCount}
               </span>
             </button>

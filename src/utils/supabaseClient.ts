@@ -455,12 +455,24 @@ export async function fetchOrdersFromSupabase(): Promise<CivicUpdate[]> {
           .filter((item: Record<string, unknown>) => {
             const id = String(item.id || item.order_id || '');
             const desc = String(item.description || '').toLowerCase();
-            if (id === 'JNT-3290' || id === 'JNT-6517') return false;
+            if (
+              id === 'JNT-3290' ||
+              id === 'JNT-6517' ||
+              id === 'JNT-4173' ||
+              id === 'JNT-8425' ||
+              id === 'JNT-6313'
+            ) {
+              return false;
+            }
             if (desc.includes('gita')) return false;
             if (desc.includes('madanpur')) return false;
             if (desc.includes('cyclone')) return false;
             if (desc.includes('gramadiha')) return false;
             if (desc.includes('gift')) return false;
+            if (desc.includes('voice/photo civic development request')) return false;
+            if (desc.includes('goverment hospital condition not good')) return false;
+            if (desc.includes('government hospital condition not good')) return false;
+            if (desc.includes('hospital condition not good')) return false;
             return true;
           })
           .map((item: Record<string, unknown>) => {
@@ -470,7 +482,7 @@ export async function fetchOrdersFromSupabase(): Promise<CivicUpdate[]> {
             }
             return {
               id: String(item.id || item.order_id || `ORD-${Date.now()}`),
-              ward: String(item.ward || 'Ward 1'),
+              ward: String(item.ward || 'Saheed Nagar, Bhubaneswar'),
               category: String(item.category || 'General'),
               description: String(item.description || ''),
               timestamp: item.created_at ? new Date(String(item.created_at)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently',
@@ -537,7 +549,7 @@ export async function syncCitizenAccountToSupabase(userData: {
     email: userData.email.trim().toLowerCase(),
     name: userData.name?.trim() || '',
     phone: userData.phone?.trim() || '',
-    ward: userData.ward || 'Ward 1',
+    ward: userData.ward || 'Saheed Nagar, Bhubaneswar',
     city: userData.city?.trim() || 'Bhubaneswar',
     address: userData.address?.trim() || '',
     pincode: userData.pincode?.trim() || '',
@@ -703,7 +715,7 @@ export async function authenticateAuthorityFromSupabase(
               avatarInitials: initials,
               avatarUrl: officerRecord.avatar_url || undefined,
               phone: officerRecord.phone || undefined,
-              ward: officerRecord.ward || 'Ward 1',
+              ward: officerRecord.ward || 'Saheed Nagar, Bhubaneswar',
               city: officerRecord.city || 'Bhubaneswar',
               address: officerRecord.address || 'Municipal Corporation Headquarters',
               pincode: officerRecord.pincode || '751001',
@@ -772,7 +784,7 @@ export async function authenticateAuthorityFromSupabase(
               avatarInitials: initials,
               avatarUrl: officerRecord.avatar_url || undefined,
               phone: officerRecord.phone || undefined,
-              ward: officerRecord.ward || 'Ward 1',
+              ward: officerRecord.ward || 'Saheed Nagar, Bhubaneswar',
               city: officerRecord.city || 'Bhubaneswar',
               address: officerRecord.address || 'Municipal Corporation Headquarters',
               pincode: officerRecord.pincode || '751001',
@@ -825,7 +837,7 @@ export async function syncAuthorityOfficerToSupabase(officer: SupabaseAuthorityR
     password: officer.password,
     name: officer.name || 'Municipal Officer',
     department: officer.department || 'Civic Administration & Public Works',
-    ward: officer.ward || 'Ward 1',
+    ward: officer.ward || 'Saheed Nagar, Bhubaneswar',
     city: officer.city || 'Bhubaneswar',
     phone: officer.phone || '+91 8847845435',
     pincode: officer.pincode || '751001',

@@ -3,7 +3,8 @@
   "description": "Civic innovation platform empowering citizens and authorities to submit, track, and resolve community development needs.",
   "requestFramePermissions": [
     "camera",
-    "microphone"
+    "microphone",
+    "geolocation"
   ],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

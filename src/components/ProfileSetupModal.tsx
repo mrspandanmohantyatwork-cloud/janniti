@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { CivicLogo } from './CivicLogo';
 import { User, UserRole } from '../types';
-import { updateAccountDetails } from '../utils/authStorage';
+import { updateAccountDetails, normalizeExactLocation } from '../utils/authStorage';
 import { uploadToAppFiles, syncCitizenAccountToSupabase, getUserEmailPrefix } from '../utils/supabaseClient';
 import {
   User as UserIcon,
@@ -32,7 +32,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
 }) => {
   const [name, setName] = useState(user.name !== user.email.split('@')[0] ? user.name : '');
   const [phone, setPhone] = useState(user.phone || '');
-  const [ward, setWard] = useState(user.ward || 'Ward 1');
+  const [ward, setWard] = useState(normalizeExactLocation(user.ward || 'Saheed Nagar'));
   const [city, setCity] = useState(user.city || 'Bhubaneswar');
   const [address, setAddress] = useState(user.address || '');
   const [pincode, setPincode] = useState(user.pincode || '');
@@ -47,7 +47,22 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
 
   if (!isOpen) return null;
 
-  const wards = Array.from({ length: 20 }, (_, i) => `Ward ${i + 1}`);
+  const LOCALITIES = [
+    'Near Hotel Num Num, Acharya Vihar Square',
+    'Near Vishal Mega Mart, Jaydev Vihar Square',
+    'Near Kalinga Stadium',
+    'Saheed Nagar',
+    'Patia / Infocity',
+    'Nayapalli',
+    'Khandagiri',
+    'Unit-2 / Market Building',
+    'Unit-6 / Capital Hospital',
+    'Rasulgarh',
+    'Master Canteen / Station Sq',
+    'Chandrasekharpur',
+    'Old Town',
+    'VSS Nagar',
+  ];
 
   const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -311,11 +326,11 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
             </div>
           </div>
 
-          {/* Ward & City */}
+          {/* Locality & City */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-[var(--text-muted)] mb-1">
-                Ward / Jurisdiction <span className="text-rose-500">*</span>
+                Locality / Area <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <MapPin className="w-4 h-4 text-sky-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -324,7 +339,7 @@ export const ProfileSetupModal: React.FC<ProfileSetupModalProps> = ({
                   onChange={(e) => setWard(e.target.value)}
                   className="w-full pl-9 pr-3 py-2.5 bg-[var(--input-bg)] border border-[var(--border-color)] rounded-xl text-[var(--text)] text-xs outline-none focus:border-sky-400"
                 >
-                  {wards.map((w) => (
+                  {LOCALITIES.map((w) => (
                     <option key={w} value={w}>
                       {w}
                     </option>

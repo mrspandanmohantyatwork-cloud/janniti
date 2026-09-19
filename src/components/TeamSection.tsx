@@ -125,9 +125,9 @@ export const TeamSection: React.FC<TeamSectionProps> = () => {
           <CivicLogo size="xl" />
         </div>
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-sky-500/10 border border-sky-500/30 text-sky-600 dark:text-sky-400 mb-3 shadow-xs">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>About The Developers &bull; Civic Innovators</span>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#0b2545]/10 border border-[#0b2545]/30 text-[#0b2545] mb-3 shadow-xs">
+          <Sparkles className="w-3.5 h-3.5 text-[#0b2545]" />
+          <span className="text-[#0b2545]">About The Developers &bull; Civic Innovators</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-blue-900 dark:text-white mb-4">
